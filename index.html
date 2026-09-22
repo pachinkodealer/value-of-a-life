@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Ephemeris of One Life — valuing a human in 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#eef0f5; --ink:#18223d; --muted:#5a6380; --brass:#9c7424; --teal:#2f7f77; --rose:#a8455a; --rule:#c9cedc; --panel:#e3e7f0;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10182e; --ink:#e9e5d8; --muted:#9aa2bd; --brass:#d4ae5c; --teal:#6cc0b5; --rose:#df8397; --rule:#2c3656; --panel:#18223d;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10182e; --ink:#e9e5d8; --muted:#9aa2bd; --brass:#d4ae5c; --teal:#6cc0b5; --rose:#df8397; --rule:#2c3656; --panel:#18223d;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:inherit}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.6 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1040px;margin:0 auto;padding:48px 22px 80px}
+h1,h2{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif;font-weight:600;line-height:1.1;margin:0}
+h1{font-size:clamp(2.4rem,6vw,4.2rem);letter-spacing:-.01em;max-width:14ch}
+h2{font-size:clamp(1.7rem,3.4vw,2.4rem);margin-bottom:.4em}
+p{max-width:68ch;margin:.6em 0}
+.lede{font-size:1.15rem;color:var(--muted)}
+section{margin-top:72px;padding-top:28px;border-top:1px solid var(--rule)}
+.hero{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;align-items:center}
+@media(min-width:900px){.hero{grid-template-columns:320px minmax(0,1fr)}}
+.wheelbox{max-width:100%;overflow-x:auto}
+svg text{font-family:"Source Sans 3",system-ui,sans-serif;fill:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.9rem;color:var(--muted);margin-top:8px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+#readout{min-height:5.2em;background:var(--panel);border-left:3px solid var(--brass);padding:12px 16px;margin-top:14px;font-size:.98rem}
+#readout b{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.25rem}
+.vrow{display:grid;grid-template-columns:minmax(150px,230px) minmax(0,1fr) 88px;gap:12px;align-items:center;padding:9px 6px;border-bottom:1px solid var(--rule);cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:left;color:inherit;font:inherit}
+.vrow:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.vrow[aria-expanded="true"]{background:var(--panel)}
+.vname{font-weight:600;font-size:.98rem}
+.vname small{display:block;font-weight:400;color:var(--muted);font-size:.82rem}
+.track{height:14px;position:relative}
+.fill{height:100%;background:var(--teal);border-radius:0 7px 7px 0}
+.fill.neg{background:var(--rose)}
+.fill.inf{background:repeating-linear-gradient(90deg,var(--brass) 0 6px,transparent 6px 10px)}
+.vval{font-variant-numeric:tabular-nums;font-weight:600;text-align:right}
+.vnote{grid-column:1/-1;font-size:.93rem;color:var(--muted);display:none;padding:4px 0 2px}
+.vrow[aria-expanded="true"] .vnote{display:block}
+.axis{display:grid;grid-template-columns:minmax(150px,230px) minmax(0,1fr) 88px;gap:12px;font-size:.78rem;color:var(--muted);padding:0 6px}
+.axis div:nth-child(2){display:flex;justify-content:space-between}
+.ledger{display:grid;grid-template-columns:minmax(0,1fr);gap:0;margin-top:18px}
+@media(min-width:760px){.ledger{grid-template-columns:1fr 1fr}}
+.col{padding:6px 20px 10px}
+.col h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.45rem;margin:0 0 6px;font-weight:600}
+.col.take{border-right:1px solid var(--rule)}
+@media(max-width:759px){.col.take{border-right:0;border-bottom:1px solid var(--rule)}}
+.li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dotted var(--rule);font-size:.97rem}
+.li span:last-child{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.take .li span:last-child{color:var(--rose)} .give .li span:last-child{color:var(--teal)}
+.lenses{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0;margin-top:14px;border-top:1px solid var(--rule)}
+.lens{padding:16px 16px 18px;border-bottom:1px solid var(--rule)}
+.lens h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.3rem;margin:0 0 4px;font-weight:600;color:var(--brass)}
+.lens p{font-size:.94rem;margin:0}
+.lens .q{margin-top:8px;font-size:.88rem;color:var(--muted)}
+.tl{overflow-x:auto}
+.foot{font-size:.85rem;color:var(--muted);margin-top:60px}
+.toggle{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:16px;background:var(--panel);color:var(--ink);border:1px solid var(--rule);border-radius:20px;padding:5px 12px;font:inherit;font-size:.85rem;cursor:pointer}
+@media (prefers-reduced-motion:no-preference){ #orbit{transition:opacity .8s} }
+</style>
+</head>
+<body>
+<button class="toggle" id="themeBtn" type="button">Switch theme</button>
+<main>
+
+<div class="hero">
+  <div>
+    <h1>The ephemeris of one human life</h1>
+    <p class="lede">An average person born into today's world gets about 73.3 years. Here is that life drawn as a single orbit, then weighed nine different ways.</p>
+    <div id="readout"><b>Tap a house or a planet.</b><br>Each of the twelve houses holds about 6.1 years. The inner shape is what the life produces at each age; the outer ring marks real planetary cycles.</div>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--teal)"></i>Paid economic output</span>
+      <span><i class="sw" style="background:var(--rose)"></i>Care given to others</span>
+      <span><i class="sw" style="background:var(--brass)"></i>Planetary returns</span>
+    </div>
+  </div>
+  <div class="wheelbox"><svg id="wheel" viewBox="0 0 700 700" width="100%" style="max-width:640px;display:block;margin:auto" role="img" aria-label="Zodiac-style wheel mapping a 73.3-year life to twelve houses with output curves and planetary returns"></svg></div>
+</div>
+
+<section>
+  <h2>What is one life worth?</h2>
+  <p>Every value system answers differently, and the spread is enormous: from a few dollars of chemistry to a number some traditions refuse to write down. Bars are on a log scale, so each gridline is ten times the last. Select a row for the reasoning behind it.</p>
+  <div class="axis"><div></div><div><span>$1</span><span>$1k</span><span>$1M</span><span>$30M</span></div><div></div></div>
+  <div id="values"></div>
+</section>
+
+<section>
+  <h2>The lifetime ledger</h2>
+  <p>Stripped of prices, a life is a flow: things drawn from the planet and other people, and things returned. These are rough world-average totals over 73 years.</p>
+  <div class="ledger">
+    <div class="col take"><h3>What a life draws down</h3>
+      <div class="li"><span>Food energy eaten</span><span>≈ 65 million kcal</span></div>
+      <div class="li"><span>Carbon dioxide emitted</span><span>≈ 340 tonnes</span></div>
+      <div class="li"><span>Drinking and household water</span><span>≈ 2.5 million L</span></div>
+      <div class="li"><span>Years of full dependency on others</span><span>≈ 18 + 5 yrs</span></div>
+      <div class="li"><span>Care received, childhood to old age</span><span>≈ 40,000 hrs</span></div>
+    </div>
+    <div class="col give"><h3>What a life gives back</h3>
+      <div class="li"><span>Paid working hours</span><span>≈ 70,000 hrs</span></div>
+      <div class="li"><span>Unpaid care and household work</span><span>≈ 60,000 hrs</span></div>
+      <div class="li"><span>Children, world average</span><span>≈ 2.25</span></div>
+      <div class="li"><span>Stable relationships sustained</span><span>≈ 150 at a time</span></div>
+      <div class="li"><span>Knowledge, culture, and memory passed on</span><span>unmeasured</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>The lenses</h2>
+  <p>Each lens answers a different question, which is why their numbers don't agree. None of them is wrong; they're measuring different things.</p>
+  <div class="lenses" id="lenses"></div>
+</section>
+
+<section>
+  <h2>Planetary returns across 73 years</h2>
+  <p>The orbital periods here are real astronomy. What they mean is astrology — a symbolic language, not a predictive science — but the timing lines up with life transitions often enough that people have used it as a calendar of meaning for millennia.</p>
+  <div class="tl"><svg id="timeline" viewBox="0 0 900 250" width="100%" style="min-width:640px" role="img" aria-label="Timeline of planetary returns from birth to age 73"></svg></div>
+</section>
+
+<p class="foot">Sources and assumptions: global life expectancy 73.3 years (UN World Population Prospects 2024); US DOT value of a statistical life $13.2M in 2023 dollars; Australian Office of Impact Analysis VSL A$5.87M and A$253k per life-year in 2025 dollars; carbon at roughly 4.7 t CO₂ per person per year and the EPA's 2023 social cost of carbon estimate (~$190/t); other figures are rounded world averages meant for scale, not precision. Planetary periods: Jupiter 11.86 yr, Saturn 29.46 yr, lunar nodes 18.6 yr, Uranus 84 yr, Chiron ~50.7 yr.</p>
+</main>
+
+<script>
+(function(){
+const LIFE=73.3, C=350, NS="http://www.w3.org/2000/svg";
+const svg=document.getElementById('wheel'), out=document.getElementById('readout');
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e};
+const ang=age=>age/LIFE*2*Math.PI-Math.PI/2;
+const pt=(r,a)=>[C+r*Math.cos(a),C+r*Math.sin(a)];
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function say(h,t){out.innerHTML='<b>'+h+'</b><br>'+t}
+
+const houses=[
+ ["I · Self","Birth to 6","First house of body and identity. Total dependence: a life takes almost everything and gives back mostly joy to caregivers."],
+ ["II · Resources","6 to 12","House of possessions and values. Schooling begins; society invests roughly $100k+ in education per child in rich countries."],
+ ["III · Learning","12 to 18","House of communication and siblings. Adolescence, peer networks, the last years of full dependency."],
+ ["IV · Roots","18 to 24","House of home and foundations. Leaving home, first paid work, the economic output curve lifts off zero."],
+ ["V · Creation","24 to 31","House of creativity and children. Most first births worldwide fall here; the first Saturn return arrives at 29.5."],
+ ["VI · Service","31 to 37","House of daily work and health. Peak caregiving load for parents of young children."],
+ ["VII · Partnership","37 to 43","House of committed partners. Uranus opposition near 42 — the archetypal midlife reckoning."],
+ ["VIII · Transformation","43 to 49","House of shared resources and inheritance. Earnings rising toward their peak; caring for ageing parents begins."],
+ ["IX · Philosophy","49 to 55","House of meaning and long journeys. Chiron return near 50; peak paid output for most workers."],
+ ["X · Standing","55 to 61","House of career and public role — lining up with peak seniority. Second Saturn return at 58.9."],
+ ["XI · Community","61 to 67","House of friends and collective hopes. Retirement in many countries; grandparenting and volunteering rise."],
+ ["XII · Dissolution","67 to 73","House of endings and the unseen. Output shifts almost entirely to care, memory, and what gets passed on."]
+];
+const signs=["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
+
+function draw(){
+ svg.innerHTML="";
+ const ink=css('--ink'),rule=css('--rule'),teal=css('--teal'),rose=css('--rose'),brass=css('--brass'),panel=css('--panel'),muted=css('--muted');
+ el('circle',{cx:C,cy:C,r:300,fill:'none',stroke:rule});
+ el('circle',{cx:C,cy:C,r:252,fill:'none',stroke:rule});
+ el('circle',{cx:C,cy:C,r:205,fill:'none',stroke:rule});
+ el('circle',{cx:C,cy:C,r:90,fill:panel,stroke:rule});
+ houses.forEach((h,i)=>{
+  const a0=ang(i*LIFE/12),a1=ang((i+1)*LIFE/12),am=(a0+a1)/2;
+  const [x0,y0]=pt(205,a0),[x1,y1]=pt(300,a0),[x2,y2]=pt(300,a1),[x3,y3]=pt(205,a1);
+  const seg=el('path',{d:`M${x0},${y0}L${x1},${y1}A300,300 0 0 1 ${x2},${y2}L${x3},${y3}A205,205 0 0 0 ${x0},${y0}Z`,fill:i%2?panel:'transparent',stroke:rule,tabindex:0,role:'button','aria-label':h[0]+', ages '+h[1],style:'cursor:pointer'});
+  const act=()=>say(h[0]+' — ages '+h[1],h[2]);
+  seg.addEventListener('click',act);seg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();act()}});
+  const [tx,ty]=pt(228,am); const t=el('text',{x:tx,y:ty+6,'text-anchor':'middle','font-size':20,fill:brass,'pointer-events':'none'}); t.textContent=signs[i];
+  const [lx,ly]=pt(275,am); const l=el('text',{x:lx,y:ly+4,'text-anchor':'middle','font-size':11,'pointer-events':'none'}); l.textContent=h[0].split(' · ')[1];
+ });
+ // output curves
+ const earn=a=>a<18?0:a<25?(a-18)/7*.55:a<50?.55+(a-25)/25*.45:a<65?1-(a-50)/15*.6:.12*Math.max(0,1-(a-65)/9);
+ const care=a=>a<12?0.03:a<25?.15+(a-12)/13*.35:a<42?.5+.5*Math.sin((a-25)/17*Math.PI):a<60?.45+ .1*Math.sin((a-42)/18*Math.PI):a<70?.55:.35;
+ function curve(fn,col,op){
+  let d='';for(let s=0;s<=300;s++){const a=s/300*LIFE,[x,y]=pt(92+fn(a)*105,ang(a));d+=(s?'L':'M')+x.toFixed(1)+','+y.toFixed(1)}
+  el('path',{d:d+'Z',fill:col,'fill-opacity':op,stroke:col,'stroke-width':1.5,'pointer-events':'none'});
+ }
+ curve(care,rose,.18); curve(earn,teal,.28);
+ // center
+ const c1=el('text',{x:C,y:C-6,'text-anchor':'middle','font-size':34,style:'font-family:"Cormorant Garamond",Georgia,serif;font-weight:600'});c1.textContent='73.3';
+ const c2=el('text',{x:C,y:C+18,'text-anchor':'middle','font-size':12,fill:muted});c2.textContent='years, world average';
+ // planetary returns
+ const ev=[
+  [11.86,"♃","Jupiter return","Age 11.9. Jupiter completes its first orbit — traditionally a coming-of-age marker, close to puberty."],
+  [18.6,"☊","Nodal return","Age 18.6. The Moon's nodes come full circle — legal adulthood in most countries."],
+  [23.72,"♃","2nd Jupiter return","Age 23.7. Typically lands in the first years of full-time work."],
+  [29.46,"♄","1st Saturn return","Age 29.5. Saturn's homecoming — astrology's 'adulthood exam', echoing the late-20s wave of marriages, career pivots and first children."],
+  [35.58,"♃","3rd Jupiter return","Age 35.6. Mid-career expansion."],
+  [42,"♅","Uranus opposition","Age ~42. Uranus reaches the far side of its orbit from where it started — the archetypal midlife crisis."],
+  [47.44,"♃","4th Jupiter return","Age 47.4. Nearing peak lifetime earnings."],
+  [50.7,"⚷","Chiron return","Age ~50.7. The 'wounded healer' cycle — often read as a turn toward teaching and mentoring."],
+  [58.92,"♄","2nd Saturn return","Age 58.9. Seniority, legacy, preparing to hand things on."],
+  [59.3,"♃","5th Jupiter return","Age 59.3. Arrives alongside the second Saturn return — a rare double alignment."],
+  [71.16,"♃","6th Jupiter return","Age 71.2. The last full Jupiter cycle an average life completes."]
+ ];
+ ev.forEach(([age,g,n,t],i)=>{
+  const a=ang(age),[x1,y1]=pt(300,a),[x2,y2]=pt(318,a),[gx,gy]=pt(i===9?340:332,a);
+  el('line',{x1,y1,x2,y2,stroke:brass,'stroke-width':2});
+  const tt=el('text',{x:gx,y:gy+6,'text-anchor':'middle','font-size':17,fill:brass,tabindex:0,role:'button','aria-label':n,style:'cursor:pointer;font-family:"Segoe UI Symbol","Noto Sans Symbols 2","Apple Symbols",sans-serif'});tt.textContent=g;
+  const act=()=>say(n,t);tt.addEventListener('click',act);tt.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();act()}});
+ });
+ drawTimeline();
+}
+
+// value systems
+const V=[
+ ["Chemical elements","Oxygen, carbon, calcium, phosphorus…",5,"","Sell the body's raw elements at commodity prices and you get about the cost of a sandwich. A reminder that none of a life's value is in the matter."],
+ ["Lifetime carbon cost","≈340 t CO₂ × ~$190/t",-65000,"neg","A negative entry: the climate damage an average person's emissions impose on others, priced at the EPA's 2023 social cost of carbon. Far higher for rich-country lifestyles, far lower for the global poor."],
+ ["Global human capital","World average income × ~40 working years",600000,"","What one average person earns over a working life at today's global average income. This is the lens insurers and lawyers use for lost earnings."],
+ ["US lifetime earnings","Median American career total",1700000,"","The same human-capital lens, applied in a high-income country. The gap between this and the global figure is the geography of birth, not the worth of the person."],
+ ["Compensation funds","9/11 fund, wrongful-death awards",2000000,"","Courts and funds combine lost earnings with pain and loss. The 9/11 Victim Compensation Fund paid families about $2M on average — and deliberately paid more for higher earners, which was controversial."],
+ ["UK NICE health threshold","£20–30k per healthy life-year × 73",2500000,"","Health systems price years of healthy life (QALYs). Multiply the UK's cost-effectiveness threshold across a full lifespan and you get this."],
+ ["Australian VSL","Willingness to pay, A$5.87M (2025)",3900000,"","The value of a statistical life: what people collectively will pay to reduce risk of death, backed out of wages for risky jobs and safety purchases. About A$253k per remaining life-year."],
+ ["US DOT VSL","Willingness to pay, $13.2M (2023$)",13200000,"","The US federal figure used to judge whether a safety rule is worth its cost. It isn't the price of any particular person — it's the value of tiny risk reductions spread across millions."],
+ ["Kant, and most religions","Dignity, not price",null,"inf","Kant split the world into things with a price and beings with dignity, which can't be traded for anything equivalent. Most religious traditions say something similar: a life is sacred, not a quantity. On this lens, every number above is a category error."]
+];
+const box=document.getElementById('values'),LMAX=Math.log10(3e7);
+const fmt=v=>{const s=v<0?'−':'';v=Math.abs(v);return s+(v>=1e6?'$'+(v/1e6).toFixed(1)+'M':v>=1e3?'$'+Math.round(v/1e3)+'k':'$'+v)};
+V.forEach(([n,s,v,cls,note])=>{
+ const b=document.createElement('button');b.className='vrow';b.type='button';b.setAttribute('aria-expanded','false');
+ const w=v===null?100:Math.max(1,Math.log10(Math.abs(v))/LMAX*100);
+ b.innerHTML=`<span class="vname">${n}<small>${s}</small></span><span class="track"><span class="fill ${cls}" style="display:block;width:${w}%"></span></span><span class="vval">${v===null?'beyond price':fmt(v)}</span><span class="vnote">${note}</span>`;
+ b.onclick=()=>b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');
+ box.appendChild(b);
+});
+
+// lenses
+const L=[
+ ["Economic","A life is a stream of productive output and consumption.","Asks: what would we lose in goods and services?"],
+ ["Actuarial & legal","A life is a set of dependents and lost earnings to be made whole.","Asks: what does a family need to be compensated?"],
+ ["Public health","A life is a count of healthy years (QALYs, DALYs).","Asks: which treatment buys the most healthy time?"],
+ ["Ecological","A life is a draw on the planet — carbon, land, water.","Asks: what does one more person cost the biosphere?"],
+ ["Relational (Ubuntu)","A person is a person through other persons.","Asks: whose lives are made possible by this one?"],
+ ["Utilitarian","A life is the sum of well-being it contains and causes.","Asks: how much good does its existence add?"],
+ ["Kantian & religious","A life has dignity, which has no equivalent.","Asks: nothing to price — only duties to honour."],
+ ["Astrological","A life is a pattern in time, written against the sky.","Asks: what season of the story is this?"]
+];
+const lz=document.getElementById('lenses');
+L.forEach(([h,p,q])=>{const d=document.createElement('div');d.className='lens';d.innerHTML=`<h3>${h}</h3><p>${p}</p><p class="q">${q}</p>`;lz.appendChild(d)});
+
+// timeline
+function drawTimeline(){
+ const t=document.getElementById('timeline');t.innerHTML='';
+ const ink=css('--ink'),rule=css('--rule'),brass=css('--brass'),teal=css('--teal'),rose=css('--rose'),muted=css('--muted');
+ const X=a=>60+a/75*800, e=(n,a)=>{const x=document.createElementNS(NS,n);for(const k in a)x.setAttribute(k,a[k]);t.appendChild(x);return x};
+ const rows=[["Jupiter · 11.86 yr",11.86,brass],["Saturn · 29.46 yr",29.46,rose],["Lunar nodes · 18.6 yr",18.6,teal],["Uranus · 84 yr (half)",42,muted]];
+ rows.forEach(([n,p,col],i)=>{
+  const y=40+i*48;
+  e('line',{x1:X(0),x2:X(LIFE),y1:y,y2:y,stroke:rule,'stroke-width':1});
+  const lab=e('text',{x:X(0),y:y-10,'font-size':12,fill:muted});lab.textContent=n;
+  for(let k=1;k*p<=LIFE;k++){const a=k*p;
+   e('circle',{cx:X(a),cy:y,r:7,fill:col});
+   const tx=e('text',{x:X(a),y:y+22,'text-anchor':'middle','font-size':11,fill:ink});tx.textContent=a.toFixed(1);
+  }
+ });
+ [0,10,20,30,40,50,60,70].forEach(a=>{const tx=e('text',{x:X(a),y:238,'text-anchor':'middle','font-size':11,fill:muted});tx.textContent=a===0?'birth':a});
+ e('line',{x1:X(LIFE),x2:X(LIFE),y1:20,y2:222,stroke:ink,'stroke-dasharray':'3 4'});
+ const end=e('text',{x:X(LIFE)+6,y:24,'font-size':11,fill:ink});end.textContent='73.3';
+}
+
+// theme
+const btn=document.getElementById('themeBtn');
+btn.onclick=()=>{const r=document.documentElement,cur=r.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');r.dataset.theme=cur==='dark'?'light':'dark';draw()};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
+draw();
+})();
+</script>
+</body>
+</html>
